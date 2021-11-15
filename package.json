@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "express": "^4.17.1",
+    "jquery": "^3.6.0",
+    "jsdom": "^18.1.0",
     "nodemon": "^1.19.1"
   }
 }

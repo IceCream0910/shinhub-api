@@ -1,46 +1,48 @@
 const express = require("express");
+var jsdom = require("jsdom");
+const { JSDOM } = jsdom;
+const { window } = new JSDOM();
+const { document } = (new JSDOM('')).window;
+global.document = document;
+var jsonString = '';
+
+var $ = jQuery = require('jquery')(window);
+
 const app = express();
 
 app.use(express.urlencoded({extended: false}));
-const exampleFragment = `Example of Read and parse 
-                         POST/PATCH/PUT request JSON 
-                         or form body with Express 
-                         and no dependencies`;
-const seeCodeFragment = `<strong>Deploying on vercel.com</strong>`
-const testText = `<html>
-                        <body>
-                          ${exampleFragment}
-                          <h2>Submit the following form</h2>
-                          <div>
-                            <form action="/form" method="post">
-                              <label for="something">Enter something:</label>
-                              <input type="text" id="something" name="something" />
-                              <button type="submit" value="">Send it</button>
-                            </form>
-                          </div>
-                          ${seeCodeFragment}
-                        </body>
-                    </html>
-`;
 
-app.get("/", (req, res) => res.send(testText));
 
-app.post("/form", (req, res) => {
-    res.send(`<html>
-                      <body>
-                        ${exampleFragment}
-                        <p>
-                          Full body is: <pre><code>${JSON.stringify(req.body)}</code></pre>
-                        </p>
-                        <p><a href="/">Go back</a></p>
-                        ${seeCodeFragment}
-                      </body>
-                    </html>
-                `
-    );
+var proxyServer = 'https://coronacoc-proxy.vercel.app/';
+
+app.get("/", (req, res) => res.send('hello world'));
+
+app.get("/api", (req, res) => {
+  //
+  $.ajax({
+    type: "GET",
+    url: proxyServer+"https://apiv2.corona-live.com/domestic-init.json", // Using myjson.com to store the JSON
+    success: function(result) {
+      var data = new Object();
+      data.cases = result.stats.cases[0];
+      data.newCases = result.stats.cases[1];
+      data.deaths = result.stats.deaths[0];
+      data.newDeaths = result.stats.deaths[1];
+      data.severe = result.stats.patientsWithSevereSymptons[0];
+      data.newSevere = result.stats.patientsWithSevereSymptons[1];
+
+      var jsonString= JSON.stringify(data);
+      
+      console.log(jsonString);
+      res.send(jsonString);
+    }
+  });
+
+  
 });
 
 const PORT = process.env.PORT || 3002;
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });
+
