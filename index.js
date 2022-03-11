@@ -20,11 +20,6 @@ firebase.initializeApp({
 var db = firebase.firestore();
 
 app.get("/", (req, res) => {
-    return res.send('server is running');
-  
-});
-
-app.get("/api", (req, res) => {
   var id = req.query.vid;
   var videoRef = db.collection('videos').doc(String(id)).get();
 
