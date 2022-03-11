@@ -1,7 +1,7 @@
-import express from 'express';
-import cors from 'cors';
-import { firebase } from '@firebase/app';
-import '@firebase/firestore';
+const express = require('express');
+const cors = require('cors');
+const {firebase} = require('@firebase/app');
+require('@firebase/firestore');
 
 const app = express();
 app.use(express.urlencoded({extended: false}));
