@@ -19,6 +19,10 @@ firebase.initializeApp({
 
 var db = firebase.firestore();
 
+app.get("/", (req, res) => {
+    return res.send('server is running');
+  
+});
 
 app.get("/:id", (req, res) => {
   var id =  req.params.id.toString();

@@ -16,5 +16,6 @@
         "firebase-tools": "^10.1.2",
         "http": "0.0.1-security",
         "nodemon": "^1.19.1"
-    }
+    },
+    "type": "module"
 }
