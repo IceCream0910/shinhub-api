@@ -17,8 +17,5 @@
         "http": "0.0.1-security",
         "nodemon": "^1.19.1"
     },
-    "engines": {
-        "node": "16.13.2"
-    },
     "type": "module"
 }
