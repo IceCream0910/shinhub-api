@@ -1,48 +1,39 @@
-const express = require("express");
-var jsdom = require("jsdom");
-const { JSDOM } = jsdom;
-const { window } = new JSDOM();
-const { document } = (new JSDOM('')).window;
-global.document = document;
-var jsonString = '';
-
-var $ = jQuery = require('jquery')(window);
+import express from 'express';
+import cors from 'cors';
+import { firebase } from '@firebase/app';
+import '@firebase/firestore';
 
 const app = express();
-
 app.use(express.urlencoded({extended: false}));
+app.use(cors());
 
-
-var proxyServer = 'https://coronacoc-proxy.vercel.app/';
-
-app.get("/", (req, res) => res.send('hello world'));
-
-app.get("/api", (req, res) => {
-  //
-  $.ajax({
-    type: "GET",
-    url: proxyServer+"https://apiv2.corona-live.com/domestic-init.json", // Using myjson.com to store the JSON
-    success: function(result) {
-      var data = new Object();
-      data.cases = result.stats.cases[0];
-      data.newCases = result.stats.cases[1];
-      data.deaths = result.stats.deaths[0];
-      data.newDeaths = result.stats.deaths[1];
-      data.severe = result.stats.patientsWithSevereSymptons[0];
-      data.newSevere = result.stats.patientsWithSevereSymptons[1];
-
-      var jsonString= JSON.stringify(data);
-      
-      console.log(jsonString);
-      res.send(jsonString);
-    }
-  });
-
-  
+firebase.initializeApp({
+  apiKey: "AIzaSyCjrkT__Fd4eGjawbmqFD-nv-NetbywaHk",
+  authDomain: "shinhub.firebaseapp.com",
+  projectId: "shinhub",
+  storageBucket: "shinhub.appspot.com",
+  messagingSenderId: "234561194082",
+  appId: "1:234561194082:web:021b2e75c2b9b30a5d693b",
+  measurementId: "G-JQ2SRLVZJX"
 });
 
+var db = firebase.firestore();
+
+
+app.get("/:id", (req, res) => {
+  var id =  req.params.id.toString();
+  var videoRef = db.collection('videos').doc(id).get();
+
+  videoRef.then(function(doc) {
+  console.log(doc, doc.data());
+  if (doc.data()) {
+    return res.send(doc.data());
+  }
+});
+  
+});
+  
 const PORT = process.env.PORT || 3002;
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });
-
