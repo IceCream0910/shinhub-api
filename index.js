@@ -24,14 +24,16 @@ app.get("/", (req, res) => {
   
 });
 
-app.get("/api/:id", (req, res) => {
-  var id =  req.params.id.toString();
-  var videoRef = db.collection('videos').doc(id).get();
+app.get("/api", (req, res) => {
+  var id = req.query.vid;
+  var videoRef = db.collection('videos').doc(String(id)).get();
 
   videoRef.then(function(doc) {
-  console.log(doc, doc.data());
+  console.log(doc.data());
   if (doc.data()) {
     return res.send(doc.data());
+  } else {
+    return res.send(id);
   }
 });
   
