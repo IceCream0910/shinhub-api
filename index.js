@@ -24,7 +24,7 @@ app.get("/", (req, res) => {
   
 });
 
-app.get("/:id", (req, res) => {
+app.get("/api/:id", (req, res) => {
   var id =  req.params.id.toString();
   var videoRef = db.collection('videos').doc(id).get();
 
